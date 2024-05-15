@@ -12,3 +12,4 @@ docker run --detach --rm --name openldap \
 
 #  ldapsearch -x -b "cn=user1,ou=users,dc=example,dc=org" -H ldap://77.246.158.10:1389 -D "cn=admin,dc=example,dc=org" -W
 https://github.com/eea/eea.docker.sdi-proftpd/blob/master/proftpd/ldap.conf
+uid=%v
