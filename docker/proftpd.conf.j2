@@ -1,0 +1,42 @@
+# ProFTPD configuration file for Docker.
+
+Include /etc/proftpd/modules.d/*.conf
+Include /etc/proftpd/conf.d/*.conf
+
+DefaultServer           on
+Group                   proftpd
+Port                    21
+ServerType              standalone
+User                    proftpd
+UseIPv6                 off
+WtmpLog                 off
+
+AllowOverwrite          {{ ALLOW_OVERWRITE }}
+MasqueradeAddress       {{ PASV_ADDRESS }}
+MaxInstances            {{ MAX_INSTANCES }}
+PassivePorts            {{ PASV_MIN_PORT }} {{ PASV_MAX_PORT }}
+ServerName              "{{ SERVER_NAME }}"
+TimesGMT                {{ TIMES_GMT }}
+Umask                   {{ LOCAL_UMASK }}
+<IfModule mod_ldap.c>
+        LDAPLog /var/log/proftpd/ldap.log
+
+        LDAPAuthBinds on
+
+        LDAPServer ldaps://LDAP_SERVER
+        LDAPBindDN "LDAP_BASEDN" "LDAP_PWD"
+        LDAPUsers  "LDAP_USER" "(uid=%u)"
+
+        LDAPSearchScope subtree
+
+        LDAPGenerateHomedir on
+        LDAPGenerateHomedirPrefix /pub
+</IfModule>
+
+<Limit SITE_CHMOD>
+  DenyAll
+</Limit>
+
+<Limit WRITE>
+  {{ WRITE_ENABLE }}
+</Limit>

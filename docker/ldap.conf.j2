@@ -1,0 +1,6 @@
+<IfModule mod_ldap.c>
+LDAPServer LDAP_SERVER
+LDAPBindDN "LDAP_BASEDN" PASSWORD
+LDAPUsers LDAP_USER (&(sAMAccountName=%u)(objectclass=user))
+LDAPSearchScope subtree
+</IfModule>

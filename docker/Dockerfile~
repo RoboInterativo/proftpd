@@ -1,0 +1,35 @@
+FROM 	gitlab.dellin.ru:5005/docker/origin/debian:11.1
+
+MAINTAINER Alex Shilo "Aleksey.Shilo@bia-tech.ru;alex.pricker@gmail.com"
+
+RUN echo "deb http://nexus.bia-tech.ru/repository/debian-bullseye/ bullseye main" > /etc/apt/sources.list
+RUN echo "deb http://nexus.bia-tech.ru/repository/debian-bullseye-security bullseye-security main" >> /etc/apt/sources.list
+RUN echo "deb http://nexus.bia-tech.ru/repository/debian-bullseye-updates bullseye-updates main" >> /etc/apt/sources.list
+
+RUN  apt-get update && apt install proftpd -y
+
+COPY entry.sh /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/entry.sh"]
+
+ENV ALLOW_OVERWRITE=on \
+    ANONYMOUS_DISABLE=off \
+    ANON_UPLOAD_ENABLE=DenyAll \
+    FTPUSER_PASSWORD_SECRET=ftp-user-password-secret \
+    FTPUSER_NAME=ftpuser \
+    FTPUSER_UID=1001 \
+    LOCAL_UMASK=022 \
+    MAX_CLIENTS=10 \
+    MAX_INSTANCES=30 \
+    PASV_ADDRESS= \
+    PASV_MAX_PORT=30100 \
+    PASV_MIN_PORT=30091 \
+    SFTP_ENABLE=off \
+    SFTP_PORT=2222 \
+    SERVER_NAME=ProFTPD \
+    TIMES_GMT=off \
+    TZ=UTC \
+    WRITE_ENABLE=AllowAll
+
+COPY proftpd.conf.j2 /etc/proftpd/proftpd.conf
+RUN chmod 644 /etc/proftpd/proftpd.conf
+RUN chmod 755 /usr/local/bin/entry.sh

@@ -1,0 +1,14 @@
+version: "3"
+services:
+  vsftpd:
+    env_file:
+      - ./vsftpd.env
+    image: my
+    pull_policy: always
+    restart: always
+    network_mode: "host"
+    volumes:
+      - /home/ashilo@dellin.local/pub:/srv
+    #  - /pub/user_conf:/etc/vsftpd/user_conf
+#    ports:
+#      - "21:21
